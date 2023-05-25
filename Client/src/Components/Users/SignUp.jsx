@@ -29,8 +29,7 @@ export default function SignUp({updateIsLog}) {
     name: '',
     phone: '',
     email: '',
-    password: '',
-    Task: []
+    password: ''
   })
 
   const [checkInput, setCheckInput] = useState({
@@ -130,20 +129,25 @@ export default function SignUp({updateIsLog}) {
     setCheckInput({ ...checkInput, password: false });
     const password = event.target.value;
 
-    if (password === '') {
-      setInputTheme({ ...inputTheme, password: themeValue.normal });
-      setMassageWarning({ ...massageWarning, password: 'Required!' });
-    }
-    else if (!patternPassword.test(password)) {
-      setInputTheme({ ...inputTheme, password: themeValue.error });
-      setMassageWarning({ ...massageWarning, password: 'Invalid password, Password must consist of 8 characters, with at least 1 number, uppercase, and special characters' })
-    }
-    else {
-      setMassageWarning({ ...massageWarning, password: '' });
-      setInputTheme({ ...inputTheme, password: themeValue.success });
-      setUser({ ...user, password: password });
-      setCheckInput({ ...checkInput, password: true });
-    }
+    // if (password === '') {
+    //   setInputTheme({ ...inputTheme, password: themeValue.normal });
+    //   setMassageWarning({ ...massageWarning, password: 'Required!' });
+    // }
+    // else if (!patternPassword.test(password)) {
+    //   setInputTheme({ ...inputTheme, password: themeValue.error });
+    //   setMassageWarning({ ...massageWarning, password: 'Invalid password, Password must consist of 8 characters, with at least 1 number, uppercase, and special characters' })
+    // }
+    // else {
+    //   setMassageWarning({ ...massageWarning, password: '' });
+    //   setInputTheme({ ...inputTheme, password: themeValue.success });
+    //   setUser({ ...user, password: password });
+    //   setCheckInput({ ...checkInput, password: true });
+    // }
+
+    setMassageWarning({ ...massageWarning, password: '' });
+    setInputTheme({ ...inputTheme, password: themeValue.success });
+    setUser({ ...user, password: password });
+    setCheckInput({ ...checkInput, password: true });
   }
 
   function handleConfirmPassword(event) {

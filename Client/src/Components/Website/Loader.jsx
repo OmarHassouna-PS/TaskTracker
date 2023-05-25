@@ -6,7 +6,7 @@ export default function Loader() {
   return (
     <div className="Loader">
     <HashLoader
-        color={'#A0D8B3'}
+        color={'#0000FF'}
         loading={true}
         size={100}
     />

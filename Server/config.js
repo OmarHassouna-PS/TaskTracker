@@ -13,7 +13,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-const User = db.collection("Users");
-const Task = db.collection("Tasks");
-module.exports = User;
+module.exports = db;
+
 

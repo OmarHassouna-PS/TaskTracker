@@ -75,19 +75,24 @@ export default function SignIn({ updateIsLog }) {
     const patternPassword = /^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,.?]).{8,}$/;
     const password = event.target.value;
 
-    if (password === '') {
-      setInputTheme({ ...inputTheme, password: themeValue.normal });
-      setMassageWarning({ ...massageWarning, password: '' });
-    }
-    else if (!patternPassword.test(password)) {
-      setInputTheme({ ...inputTheme, password: themeValue.error });
-      setMassageWarning({ ...massageWarning, password: 'Invalid password' })
-    }
-    else {
-      setMassageWarning({ ...massageWarning, password: '' });
-      setInputTheme({ ...inputTheme, password: themeValue.success });
-      setUser({ ...user, password: password });
-    }
+    // if (password === '') {
+    //   setInputTheme({ ...inputTheme, password: themeValue.normal });
+    //   setMassageWarning({ ...massageWarning, password: '' });
+    // }
+    // else if (!patternPassword.test(password)) {
+    //   setInputTheme({ ...inputTheme, password: themeValue.error });
+    //   setMassageWarning({ ...massageWarning, password: 'Invalid password' })
+    // }
+    // else {
+    //   setMassageWarning({ ...massageWarning, password: '' });
+    //   setInputTheme({ ...inputTheme, password: themeValue.success });
+    //   setUser({ ...user, password: password });
+    // }
+
+       setMassageWarning({ ...massageWarning, password: '' });
+     setInputTheme({ ...inputTheme, password: themeValue.success });
+     setUser({ ...user, password: password });
+
   }
 
   function handleSubmit(event) {
@@ -100,7 +105,6 @@ export default function SignIn({ updateIsLog }) {
     checkToken();
 
     if (token) {
-      console.log('token')
       localStorage.setItem("user", JSON.stringify(token))
 
       updateIsLog(true);
@@ -108,9 +112,9 @@ export default function SignIn({ updateIsLog }) {
       navigate(path);
     }
     else if (userCheck) {
-      console.log('userCheck')
+      
       localStorage.setItem("user", JSON.stringify(userCheck))
-      axios.post('http://localhost:5000/create', userCheck).then((res) => {
+      axios.post('http://localhost:5000/createToken', userCheck).then((res) => {
         localStorage.setItem("token", JSON.stringify(res.data))
         console.log(res)
       }).catch((err) => {
@@ -135,7 +139,6 @@ export default function SignIn({ updateIsLog }) {
         }
       });
 
-      console.log(response);
       if (response.data !== undefined) {
         setToken(response.data);
         return response.data;
@@ -154,6 +157,7 @@ export default function SignIn({ updateIsLog }) {
         return user.email === email && user.password === password;
       });
       setUserCheck(result[0]);
+
     } catch (error) {
       console.log(error);
       return null;

@@ -1,4 +1,5 @@
-const User = require("./config");
+const db  = require("./config");
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -9,6 +10,10 @@ const jwt = require("jsonwebtoken");
 
 app.use(express.json());
 app.use(cors());
+
+
+const User = db.collection("Users");
+const Task = db.collection("Tasks");
 
 app.get("/", async (req, res) => {
   const snapShot = await User.get();
@@ -41,23 +46,45 @@ app.get("/LogIn", (req, res) => {
 app.post("/create", async (req, res) => {
   let data = req.body;
   const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_KEY);
-  console.log(data)
   await User.add(data);
   res.send(accessToken);
 });
 
+app.post("/createToken", async (req, res) => {
+  let data = req.body;
+  const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_KEY);
+  res.send(accessToken);
+});
 
-app.post("/update", async (req, res) => {
+app.get("/getTasks", async (req, res) => {
+  let id = req.body.id;
+  const snapShot = await Task.get();
+  const Tasks = snapShot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  res.send(Tasks);
+});
+
+app.post("/createTask", async (req, res) => {
+  const data = req.body;
+  await Task.add(data);
+  res.send();
+});
+
+
+app.post("/updateTask", async (req, res) => {
+  console.log(req.body)
   const id = req.body.id;
   delete req.body.id;
   const data = req.body;
-  await User.doc(id).update(data);
+  await Task.doc(id).update(data);
   res.send({ msg: "Updated" });
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/deleteTask", async (req, res) => {
   const id = req.body.id;
-  await User.doc(id).delete();
+  await Task.doc(id).delete();
   res.send({ msg: "Deleted" });
 });
 

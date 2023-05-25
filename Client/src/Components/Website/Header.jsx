@@ -11,10 +11,11 @@ export default function Header({ isLog, updateIsLog }) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       updateIsLog(false)
+      isToken(false)
    }
 
    useEffect( () => {
-      setToken(JSON.parse(localStorage.getItem('token')));
+      setToken(JSON.parse(localStorage.getItem('token')) || false);
    }, [isLog])
 
    return (
