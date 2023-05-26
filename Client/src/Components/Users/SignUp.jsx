@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import '../../CSS/Users.css'
-import Logo from '../../Images/logo.png'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import SignGoogle from './SignInWithGoogle';
-import Facebook from './SigInWithFacebook';
 import axios from 'axios';
 
 
@@ -16,7 +13,8 @@ export default function SignUp({updateIsLog}) {
   
   const navigate = useNavigate();
 
-  const [path, setPath] = useState('/');
+  const [path, setPath] = useState('/signIn');
+  const [userCheck, setUserCheck] = useState(false);
 
   const location = useLocation();
 
@@ -102,10 +100,32 @@ export default function SignUp({updateIsLog}) {
     }
   }
 
-  function handleEmail(event) {
+  async function checkUsers(email) {
+    try {
+      const response = await axios.get("http://localhost:5000/");
+
+      const result = response.data.filter((user) => {
+        return user.email === email;
+      });
+
+      return result.length === 0 ? false : true;
+
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async function handleEmail(event) {
     const patternEmail = /^[A-z0-9\.]+@[A-z0-9]+\.[A-z]{3,5}$/;
     setCheckInput({ ...checkInput, email: false });
     const email = event.target.value;
+
+    let isEmailExist = true;
+
+    await checkUsers(email).then( (res) => {
+      isEmailExist = res;
+    });
 
     if (email === '') {
       setInputTheme({ ...inputTheme, email: themeValue.normal });
@@ -114,6 +134,11 @@ export default function SignUp({updateIsLog}) {
     else if (!patternEmail.test(email)) {
       setInputTheme({ ...inputTheme, email: themeValue.error });
       setMassageWarning({ ...massageWarning, email: 'Invalid email' });
+    }
+    else if (isEmailExist) {
+      setMassageWarning({ ...massageWarning, email: 'Email is already exist' });
+      setInputTheme({ ...inputTheme, email: themeValue.error });
+      setUser({ ...user, email: email });
     }
     else {
       setMassageWarning({ ...massageWarning, email: '' });
@@ -129,25 +154,20 @@ export default function SignUp({updateIsLog}) {
     setCheckInput({ ...checkInput, password: false });
     const password = event.target.value;
 
-    // if (password === '') {
-    //   setInputTheme({ ...inputTheme, password: themeValue.normal });
-    //   setMassageWarning({ ...massageWarning, password: 'Required!' });
-    // }
-    // else if (!patternPassword.test(password)) {
-    //   setInputTheme({ ...inputTheme, password: themeValue.error });
-    //   setMassageWarning({ ...massageWarning, password: 'Invalid password, Password must consist of 8 characters, with at least 1 number, uppercase, and special characters' })
-    // }
-    // else {
-    //   setMassageWarning({ ...massageWarning, password: '' });
-    //   setInputTheme({ ...inputTheme, password: themeValue.success });
-    //   setUser({ ...user, password: password });
-    //   setCheckInput({ ...checkInput, password: true });
-    // }
-
-    setMassageWarning({ ...massageWarning, password: '' });
-    setInputTheme({ ...inputTheme, password: themeValue.success });
-    setUser({ ...user, password: password });
-    setCheckInput({ ...checkInput, password: true });
+    if (password === '') {
+      setInputTheme({ ...inputTheme, password: themeValue.normal });
+      setMassageWarning({ ...massageWarning, password: 'Required!' });
+    }
+    else if (!patternPassword.test(password)) {
+      setInputTheme({ ...inputTheme, password: themeValue.error });
+      setMassageWarning({ ...massageWarning, password: 'Invalid password, Password must consist of 8 characters, with at least 1 number, uppercase, and special characters' })
+    }
+    else {
+      setMassageWarning({ ...massageWarning, password: '' });
+      setInputTheme({ ...inputTheme, password: themeValue.success });
+      setUser({ ...user, password: password });
+      setCheckInput({ ...checkInput, password: true });
+    }
   }
 
   function handleConfirmPassword(event) {
@@ -179,8 +199,7 @@ export default function SignUp({updateIsLog}) {
       sendDataToServer(user);
 
       event.target.reset();
-      updateIsLog(true);
-      navigate('/SignIn');
+      navigate(path);
     }
     else {
       setMassageWarning({ ...massageWarning, submit: 'Please fill in all fields or verify that the input is correct.' });
@@ -209,20 +228,6 @@ export default function SignUp({updateIsLog}) {
               Sign Up to Join Us!
             </h1>
             <div class="w-full flex-1 mt-8">
-              <div class="flex flex-col items-center">
-
-                {/* <SignGoogle massage={"Sign in with Google"} />
-
-                <Facebook massage={"Sign in with Facebook"} /> */}
-              </div>
-
-              <div class="my-12 border-b text-center">
-                <div
-                  class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2"
-                >
-                  Or sign Up with e-mail
-                </div>
-              </div>
               <form onSubmit={(event) => handleSubmit(event)}>
                 <div class="mx-auto max-w-xs">
                   <div class="mb-3">
@@ -270,7 +275,7 @@ export default function SignUp({updateIsLog}) {
                     </span>
                   </button>
                   <p className={`mt-2 text-sm text-${themeValue.warning}-600 dark:text-${themeValue.warning}-500`}><span class="font-medium">{massageWarning.submit}</span></p>
-                  <p className={`mt-2 text-sm text-${themeValue.normal}-600 dark:text-${themeValue.normal}-500`}>You already have an account! <Link to="/signIn" className={`font-bold text-${themeValue.normal}-300 transition hover:text-${themeValue.normal}-500/75`}>Sign In</Link></p>
+                  <p className={`mt-2 text-sm text-${themeValue.normal}-600 dark:text-${themeValue.normal}-500`}>You already have an account! <Link to="/signIn" className={`font-bold text-${themeValue.normal}-600 transition hover:text-${themeValue.normal}-500/75`}>Sign In</Link></p>
                 </div>
               </form>
             </div>

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import '../../CSS/Users.css'
-import Logo from '../../Images/logo.png'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import SignGoogle from './SignInWithGoogle'
-import Facebook from './SigInWithFacebook';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -15,8 +12,6 @@ export default function SignIn({ updateIsLog }) {
 
   const navigate = useNavigate();
   const [user, setUser] = useState(false);
-  const [userCheck, setUserCheck] = useState(false);
-  const [token, setToken] = useState(false);
   const [path, setPath] = useState('/');
   const [accessToken, setAccessToken] = useState(false);
 
@@ -75,34 +70,29 @@ export default function SignIn({ updateIsLog }) {
     const patternPassword = /^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,.?]).{8,}$/;
     const password = event.target.value;
 
-    // if (password === '') {
-    //   setInputTheme({ ...inputTheme, password: themeValue.normal });
-    //   setMassageWarning({ ...massageWarning, password: '' });
-    // }
-    // else if (!patternPassword.test(password)) {
-    //   setInputTheme({ ...inputTheme, password: themeValue.error });
-    //   setMassageWarning({ ...massageWarning, password: 'Invalid password' })
-    // }
-    // else {
-    //   setMassageWarning({ ...massageWarning, password: '' });
-    //   setInputTheme({ ...inputTheme, password: themeValue.success });
-    //   setUser({ ...user, password: password });
-    // }
-
-       setMassageWarning({ ...massageWarning, password: '' });
-     setInputTheme({ ...inputTheme, password: themeValue.success });
-     setUser({ ...user, password: password });
-
+    if (password === '') {
+      setInputTheme({ ...inputTheme, password: themeValue.normal });
+      setMassageWarning({ ...massageWarning, password: '' });
+    }
+    else if (!patternPassword.test(password)) {
+      setInputTheme({ ...inputTheme, password: themeValue.error });
+      setMassageWarning({ ...massageWarning, password: 'Invalid password' })
+    }
+    else {
+      setMassageWarning({ ...massageWarning, password: '' });
+      setInputTheme({ ...inputTheme, password: themeValue.success });
+      setUser({ ...user, password: password });
+    }
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const email = event.target.email.value;
     const password = event.target.password.value;
 
-    checkUsers(email, password);
-    checkToken();
+    const userCheck = await checkUsers(email, password);
+    const token = await checkToken();
 
     if (token) {
       localStorage.setItem("user", JSON.stringify(token))
@@ -112,9 +102,9 @@ export default function SignIn({ updateIsLog }) {
       navigate(path);
     }
     else if (userCheck) {
-      
+
       localStorage.setItem("user", JSON.stringify(userCheck))
-      axios.post('http://localhost:5000/createToken', userCheck).then((res) => {
+      await axios.post('http://localhost:5000/createToken', userCheck).then((res) => {
         localStorage.setItem("token", JSON.stringify(res.data))
         console.log(res)
       }).catch((err) => {
@@ -138,11 +128,8 @@ export default function SignIn({ updateIsLog }) {
           'authorization': `Bearer ${accessToken}`
         }
       });
+      return response.data;
 
-      if (response.data !== undefined) {
-        setToken(response.data);
-        return response.data;
-      }
     } catch (error) {
       console.log(error);
       return false;
@@ -156,7 +143,7 @@ export default function SignIn({ updateIsLog }) {
       const result = response.data.filter((user) => {
         return user.email === email && user.password === password;
       });
-      setUserCheck(result[0]);
+      return result[0];
 
     } catch (error) {
       console.log(error);
@@ -179,20 +166,6 @@ export default function SignIn({ updateIsLog }) {
               Sign in your account
             </h1>
             <div class="w-full flex-1 mt-8">
-              <div class="flex flex-col items-center">
-
-                {/* <SignGoogle massage={"Sign in with Google"} path={path} updateIsLog={updateIsLog} />
-
-                <Facebook massage={"Sign in with Facebook"} path={path} updateIsLog={updateIsLog} /> */}
-              </div>
-
-              <div class="my-12 border-b text-center">
-                <div
-                  class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2"
-                >
-                  Or sign in with e-mail
-                </div>
-              </div>
               <form onSubmit={(event) => handleSubmit(event)}>
                 <div class="mx-auto max-w-xs">
                   <div class="mb-6">
@@ -224,7 +197,7 @@ export default function SignIn({ updateIsLog }) {
                     </span>
                   </button>
                   <p className={`mt-2 text-sm text-${themeValue.warning}-600 dark:text-${themeValue.warning}-500`}><span class="font-medium">{massageWarning.submit}</span></p>
-                  <p className={`mt-2 text-sm text-${themeValue.normal}-600 dark:text-${themeValue.normal}-500`}>Don't have an account! <Link to={path === "/payment" ? { pathname: "/signUp", search: "CheckOut" } : "/signUp"} className={`font-bold text-${themeValue.normal}-300 transition hover:text-${themeValue.normal}-500/75`}>Sign Up</Link></p>
+                  <p className={`mt-2 text-sm text-${themeValue.normal}-600 dark:text-${themeValue.normal}-500`}>Don't have an account! <Link to={path === "/payment" ? { pathname: "/signUp", search: "CheckOut" } : "/signUp"} className={`font-bold text-${themeValue.normal}-600 transition hover:text-${themeValue.normal}-500/75`}>Sign Up</Link></p>
                 </div>
               </form>
             </div>

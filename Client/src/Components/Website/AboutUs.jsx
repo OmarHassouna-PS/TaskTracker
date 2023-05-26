@@ -1,21 +1,20 @@
 import { AiFillGithub } from "react-icons/ai";
+
 const AboutUs = () => {
+    
     const team = [
         {
             avatar: "https://avatars.githubusercontent.com/u/89196648?v=4",
             name: "Omar Hassouna",
             title: "Full stack developer",
-            linkedin: "https://github.com/OmarHassouna-PS",
+            linkedin: "https://www.linkedin.com/in/omar-hassouna-97b76b1aa/",
             Github: "https://github.com/OmarHassouna-PS",
         },
     ]
 
     return (
-        <>
             <>
-                {/* Container for demo purpose */}
                 <div className="mb-20">
-                    {/* Section: Design Block */}
                     <section className="mb-32">
                         <div
                             className="relative overflow-hidden bg-no-repeat bg-cover"
@@ -24,7 +23,7 @@ const AboutUs = () => {
                                 backgroundImage:
                                     'url("https://cdn.discordapp.com/attachments/1110119350838513677/1110418871535554560/top-view-children-s-desk-with-notebook-pen.jpg")',
                                 height: 500
-                            }}/>
+                            }} />
                         <div className="mx-auto px-6 md:px-12 xl:px-32">
                             <div className="text-center text-gray-800">
                                 <div
@@ -38,23 +37,20 @@ const AboutUs = () => {
                                         To Do
                                     </h1>
                                     <p className="text-xl font-bold tracking-tight mb-12">
-                                    to-do list-app shows a list of tasks that need to be completed in a Fully responsive website. It's a simple and effective way to organize and prioritize your tasks, helping you stay focused and productive.
-                                    By creating a to-do list, you can better manage your time, track your progress, and ensure that important tasks are completed in a timely manner.
+                                        to-do list-app shows a list of tasks that need to be completed in a Fully responsive website. It's a simple and effective way to organize and prioritize your tasks, helping you stay focused and productive.
+                                        By creating a to-do list, you can better manage your time, track your progress, and ensure that important tasks are completed in a timely manner.
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </section>
-                    {/* Section: Design Block */}
                 </div>
-                {/* Container for demo purpose */}
-            </>
 
             <section className="py-14">
                 <div className="max-w-screen-xl mx-auto px-4 md:px-8">
                     <div className="max-w-xl">
                         <h3 className="text-gray-800 text-3xl font-semibold sm:text-4xl">
-                            Website developer
+                            Website Developer
                         </h3>
                     </div>
                     <div className="mt-12">

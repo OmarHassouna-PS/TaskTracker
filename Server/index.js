@@ -57,7 +57,6 @@ app.post("/createToken", async (req, res) => {
 });
 
 app.get("/getTasks", async (req, res) => {
-  let id = req.body.id;
   const snapShot = await Task.get();
   const Tasks = snapShot.docs.map((doc) => ({
     id: doc.id,
@@ -72,9 +71,7 @@ app.post("/createTask", async (req, res) => {
   res.send();
 });
 
-
 app.post("/updateTask", async (req, res) => {
-  console.log(req.body)
   const id = req.body.id;
   delete req.body.id;
   const data = req.body;
@@ -87,6 +84,5 @@ app.post("/deleteTask", async (req, res) => {
   await Task.doc(id).delete();
   res.send({ msg: "Deleted" });
 });
-
 
 app.listen(PORT);

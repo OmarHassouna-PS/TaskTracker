@@ -11,7 +11,6 @@ export default function Header({ isLog, updateIsLog }) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       updateIsLog(false)
-      isToken(false)
    }
 
    useEffect( () => {
