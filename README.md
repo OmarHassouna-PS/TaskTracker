@@ -1,8 +1,8 @@
-# Productive plus
+# TaskTracker
 
-##### A fully responsive React ToDo web application .
+## A fully responsive React ToDo web application .
 
-##### **⚙️ TOOLS and Technologies Used **
+### ⚙️ TOOLS and Technologies Used 
 
 - **NodeJS**
 - **ReactJS**
